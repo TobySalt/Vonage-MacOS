@@ -3,7 +3,7 @@
 #description     :This script will set up a Mac to the Vonage standard.
 #author		       :Toby Salt
 #date            :25/02/2021
-#version         :1.4
+#version         :1.5
 #usage		       :sudo sh MacosInstall.sh
 #==============================================================================
 
@@ -97,7 +97,7 @@ function initalSetup {
   installChrome
   installSlack
   installVBC
-  installPulse
+  #installPulse
 
 }
 
