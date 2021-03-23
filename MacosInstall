@@ -13,8 +13,6 @@ clear && rm -rf ~/macapps && mkdir ~/macapps > /dev/null && cd ~/macapps
 ##        Variables        ##
 #############################
 
-email='VMBL@vonage.com'
-
 
 versionChecker() {
 	local v1=$1; local v2=$2;
