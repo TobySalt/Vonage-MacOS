@@ -1,4 +1,4 @@
-#!/bin/bash -       
+#!/bin/bash -
 #title           :MacosInstall.sh
 #description     :This script will set up a Mac to the Vonage standard.
 #author		       :Toby Salt
@@ -78,16 +78,16 @@ function initalSetup {
     # Set machine hostname
     serialNo=$(system_profiler SPHardwareDataType | grep "Serial Number" | awk -F ':' '{print $2}'  | awk -F "[: ]+" '{print $2}' )
     # Make sure hostname conforms to our standard
-      hostname="VONMAC-${serialNo}"
-      scutil --set HostName $hostname 
-      scutil --set LocalHostName $hostname 
+      hostname="VON-${serialNo}"
+      scutil --set HostName $hostname
+      scutil --set LocalHostName $hostname
       scutil --set ComputerName $hostname
 
       echo 'Hostname set to -' $hostname
     else
       echo -e 'Please enter a valid hostname following VONMAC-SerialNumber.'
       exit
-  
+
   fi
 
   # Run installs
@@ -102,7 +102,7 @@ function initalSetup {
 }
 
 function installNoMAD {
- 
+
   echo 'Install NoMAD'
   # Check if NoMAD is installed, install if it is not
   if [ ! -d /Applications/NoMAD.app ]; then
@@ -110,7 +110,7 @@ function installNoMAD {
     curl --progress-bar -o /tmp/NoMAD.pkg https://files.nomad.menu/NoMAD.pkg
     # Install the pkg
     installer -pkg "/tmp/NoMAD.pkg" -target /
-  else 
+  else
     echo 'NoMAD is already installed'
   fi
   # NoMAD conf file location
@@ -155,7 +155,7 @@ function installTrend {
 
     curl --progress-bar -o ~/downloads/tmsminstall.zip https://macos-build-storage.s3-eu-west-1.amazonaws.com/tmsminstall.zip
     cd ~/downloads/
-    ls 
+    ls
     unzip -d ~/downloads/tmsminstall/ tmsminstall.zip
 
 
@@ -168,10 +168,10 @@ function installTrend {
 function installAirwatch {
   echo 'Install Airwatch Workspace One'
   if [ ! -d /Applications/Workspace\ ONE\ Intelligent\ Hub.app ]; then
-  
+
   curl --progress-bar -o /tmp/Airwatch.pkg https://packages.vmware.com/wsone/VMwareWorkspaceONEIntelligentHub.pkg
 
-  installer -pkg /tmp/Airwatch.pkg -target / 
+  installer -pkg /tmp/Airwatch.pkg -target /
 
   else
   echo 'Airwatch is already installed'
@@ -205,7 +205,7 @@ function installVBC {
   fi
 }
 
-#function installPulse { 
+#function installPulse {
  # echo 'Install Pulse Secure'
   #if [ ! -d /Applications/Pulse\ Secure.app ]; then
    # installApp "dmg" "PulseSecure" "1" "https://macos-build-storage.s3-eu-west-1.amazonaws.com/PulseSecure.dmg" "" "" ""
@@ -247,14 +247,14 @@ if [ -z $1 ]; then
 fi
 
 while getopts nitaschv option; do
-  case "${option}" in 
+  case "${option}" in
 
     n)  isRoot
-        installNoMAD 
+        installNoMAD
         ;;
 
     i)  isRoot
-        initalSetup 
+        initalSetup
         ;;
 
     t)  isRoot
@@ -262,7 +262,7 @@ while getopts nitaschv option; do
         ;;
 
     a)  isRoot
-        installAirwatch 
+        installAirwatch
         ;;
 
     s)  isRoot
@@ -283,10 +283,10 @@ while getopts nitaschv option; do
 
     h)  printHelp ;;
     *)  echo 'Not a valid option.'
-        printHelp 
+        printHelp
         ;;
 
   esac
 done
 
-rm -rf ~/macapps 
+rm -rf ~/macapps
