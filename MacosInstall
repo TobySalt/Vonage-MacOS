@@ -3,7 +3,7 @@
 #description     :This script will set up a Mac to the Vonage standard.
 #author		       :Toby Salt
 #date            :25/02/2021
-#version         :1.5
+#version         :1.6
 #usage		       :sudo sh MacosInstall.sh
 #==============================================================================
 
@@ -68,7 +68,13 @@ installApp() {
 #############################
 
 function initalSetup {
-  echo ' Initial Setup'
+  echo 'Initial Setup'
+
+  #Check if M1 chip
+  if [['uname -m' == 'arm64']]; then 
+    echo "This Mac uses the Silicon chipset -- Installing Rosetta 2"
+    softwareupdate --install-rosetta --agree-to-license
+  fi
 
   # Set Hostname
   if ! $($hostname) | grep -q -E '[A-Z][0-9]{20}' ; then
