@@ -2,8 +2,8 @@
 #title           :MacosInstall.sh
 #description     :This script will set up a Mac to the Vonage standard.
 #author		       :Toby Salt
-#date            :25/02/2021
-#version         :1.6
+#date            :21/7/2021
+#version         :2.0.0
 #usage		       :sudo sh MacosInstall.sh
 #==============================================================================
 
@@ -69,12 +69,8 @@ installApp() {
 
 function initalSetup {
   echo 'Initial Setup'
-
-  #Check if M1 chip
-  if [['uname -m' == 'arm64']]; then 
-    echo "This Mac uses the Silicon chipset -- Installing Rosetta 2"
-    softwareupdate --install-rosetta --agree-to-license
-  fi
+  #Install Rosetta 2
+    /usr/sbin/softwareupdate --install-rosetta --agree-to-license
 
   # Set Hostname
   if ! $($hostname) | grep -q -E '[A-Z][0-9]{20}' ; then
@@ -100,8 +96,8 @@ function initalSetup {
   installTrend
   installChrome
   installSlack
-  installVBC
-  #installPulse
+  installVBCß
+  installPulse
 
 }
 
@@ -153,32 +149,23 @@ function installNoMAD {
 function installTrend {
   echo 'Install Trend Apex One'
   if [ ! -d /Applications/TrendMicroSecurity.app ]; then
-
-   # curl -c ./cookie -s -L "https://drive.google.com/uc?export=download&id=1MIlXDjkTReBDEviJd9m8eoNilQP4VOAQ"
-    # curl -Lb ./cookie "https://drive.google.com/uc?export=download&confirm=`awk '/download/ {print $NF}' ./cookie`&id=1MIlXDjkTReBDEviJd9m8eoNilQP4VOAQ" -o ~/downloads/tmsminstall.zip
-
     curl --progress-bar -o ~/downloads/tmsminstall.zip https://macos-build-storage.s3-eu-west-1.amazonaws.com/tmsminstall.zip
     cd ~/downloads/
     ls
     unzip -d ~/downloads/tmsminstall/ tmsminstall.zip
-
-
     installer -pkg ~/downloads/tmsminstall/tmsminstall/tmsminstall.pkg -target /
   else
-  echo 'TrendMicro Apex One is already installed'
+    echo 'TrendMicro Apex One is already installed'
   fi
 }
 
 function installAirwatch {
   echo 'Install Airwatch Workspace One'
   if [ ! -d /Applications/Workspace\ ONE\ Intelligent\ Hub.app ]; then
-
-  curl --progress-bar -o /tmp/Airwatch.pkg https://packages.vmware.com/wsone/VMwareWorkspaceONEIntelligentHub.pkg
-
-  installer -pkg /tmp/Airwatch.pkg -target /
-
+    curl --progress-bar -o /tmp/Airwatch.pkg https://packages.vmware.com/wsone/VMwareWorkspaceONEIntelligentHub.pkg
+    installer -pkg /tmp/Airwatch.pkg -target /
   else
-  echo 'Airwatch is already installed'
+    echo 'Airwatch is already installed'
   fi
 }
 
@@ -209,16 +196,16 @@ function installVBC {
   fi
 }
 
-#function installPulse {
- # echo 'Install Pulse Secure'
-  #if [ ! -d /Applications/Pulse\ Secure.app ]; then
-   # installApp "dmg" "PulseSecure" "1" "https://macos-build-storage.s3-eu-west-1.amazonaws.com/PulseSecure.dmg" "" "" ""
-  #else
-   # echo 'Pulse is already installed'
- # fi
-#}
-
-
+function installPulse {
+  echo 'Install Pulse Secure'
+    if [ ! -d /Applications/Pulse\ Secure.app ]; then
+      curl --progress-bar -o ~/downloads/pulsesecure.pkg https://macos-build-storage.s3.eu-west-1.amazonaws.com/PulseSecure.pkg
+      installer -pkg ~/downloads/pulsesecure.pkg -target /
+      rm ~/downloads/pulsesecure.pkg
+  else
+    echo 'Pulse is already installed'
+  fi
+}
 
 function printHelp {
   echo 'Usage: ./MacOS-Setup.sh -i'
@@ -230,7 +217,7 @@ function printHelp {
   echo '      -s to install Slack'
   echo '      -c to install Chrome'
   echo '      -v to install Vonage Business'
- # echo '      -p to install Pulse Secure'
+  echo '      -p to install Pulse Secure'
 }
 
 function isRoot {
@@ -250,7 +237,7 @@ if [ -z $1 ]; then
   printHelp
 fi
 
-while getopts nitaschv option; do
+while getopts nitaschvp option; do
   case "${option}" in
 
     n)  isRoot
