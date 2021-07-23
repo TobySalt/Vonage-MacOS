@@ -96,7 +96,7 @@ function initalSetup {
   installTrend
   installChrome
   installSlack
-  installVBCß
+  installVBC
   installPulse
 
 }
